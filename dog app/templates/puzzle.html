@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Jigsaw - Puzzle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            border-bottom: 1px solid #1a1a1a;
+            background: #111;
+        }
+
+        nav .logo {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #C41230;
+            letter-spacing: -0.5px;
+        }
+
+        nav .nav-links a {
+            color: #999;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav .nav-links a:hover {
+            color: #C41230;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+
+        .hero h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .hero .subtitle {
+            color: #777;
+            font-size: 1em;
+            font-weight: 400;
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: #C41230;
+            margin: 20px auto;
+        }
+
+        .puzzle-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+            text-align: center;
+        }
+
+        .puzzle-layout {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .puzzle-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+            background: #222;
+            border: 2px solid #2a2a2a;
+            border-radius: 8px;
+            padding: 3px;
+            width: 390px;
+            height: 390px;
+        }
+
+        .puzzle-tile {
+            width: 100%;
+            height: 100%;
+            background-size: 390px 390px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .puzzle-tile:hover {
+            transform: scale(1.03);
+            z-index: 1;
+            box-shadow: 0 0 10px rgba(196, 18, 48, 0.4);
+        }
+
+        .puzzle-tile.selected {
+            outline: 3px solid #C41230;
+            outline-offset: -3px;
+            transform: scale(1.05);
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(196, 18, 48, 0.5);
+        }
+
+        .puzzle-tile.correct {
+            outline: 2px solid #00d45a;
+            outline-offset: -2px;
+        }
+
+        @keyframes swapFlash {
+            0% { filter: brightness(1); }
+            50% { filter: brightness(1.5); }
+            100% { filter: brightness(1); }
+        }
+
+        .puzzle-tile.swapped {
+            animation: swapFlash 0.3s ease;
+        }
+
+        .reference-section {
+            text-align: center;
+        }
+
+        .reference-label {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .reference-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #2a2a2a;
+        }
+
+        .controls {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            background: #C41230;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #a30f28;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #e0e0e0;
+            border: 1px solid #2a2a2a;
+        }
+
+        .btn-outline:hover {
+            background: #1a1a1a;
+            border-color: #C41230;
+            color: #C41230;
+        }
+
+        .move-counter {
+            color: #555;
+            font-size: 0.85em;
+            margin-top: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        @keyframes winPulse {
+            0% { transform: scale(1); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .win-message {
+            display: none;
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #122a18;
+            border: 1px solid #00d45a;
+            border-radius: 8px;
+            color: #00d45a;
+            font-weight: 700;
+            font-size: 1.2em;
+            animation: winPulse 0.5s ease;
+        }
+
+        .win-message.show {
+            display: inline-block;
+        }
+
+        .score-badge {
+            color: #C41230;
+            font-weight: 700;
+            font-size: 0.95em;
+            margin-left: 30px;
+        }
+
+        .points-earned {
+            display: none;
+            margin-top: 10px;
+            color: #aaa;
+            font-size: 0.95em;
+        }
+
+        .points-earned.show {
+            display: block;
+        }
+
+        .points-earned strong {
+            color: #00d45a;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Dog Jigsaw</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/favorites">Favorites</a>
+            <span class="score-badge" title="Puzzles solved">&#127942; <span id="navScore">{{ score.total_points }}</span> pts</span>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Jigsaw Puzzle</h1>
+        <p class="subtitle">Click two tiles to swap them. Solve the puzzle!</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="puzzle-container">
+        <div class="puzzle-layout">
+            <div>
+                <div class="puzzle-board" id="puzzleBoard"></div>
+                <div class="move-counter" id="moveCounter">Moves: 0</div>
+            </div>
+            <div class="reference-section">
+                <div class="reference-label">Reference</div>
+                <img src="{{ image_url }}" alt="Reference" class="reference-img" crossorigin="anonymous">
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="shuffleBtn">Shuffle</button>
+            <a href="/favorites" class="btn btn-outline">Back to Favorites</a>
+        </div>
+
+        <div class="win-message" id="winMessage">Puzzle Solved!</div>
+        <div class="points-earned" id="pointsEarned"></div>
+    </div>
+
+    <script>
+        (function() {
+            var IMAGE_URL = "{{ image_url }}";
+            var GRID = 3;
+            var TOTAL = GRID * GRID;
+            var board = document.getElementById('puzzleBoard');
+            var moveCounter = document.getElementById('moveCounter');
+            var winMessage = document.getElementById('winMessage');
+            var shuffleBtn = document.getElementById('shuffleBtn');
+
+            // tiles[i] = which original piece is at position i
+            var tiles = [];
+            var selected = -1;
+            var moves = 0;
+            var solved = false;
+
+            // Load image to get dimensions, then use CSS background
+            var img = new Image();
+            img.crossOrigin = "anonymous";
+            img.onload = function() {
+                initPuzzle();
+            };
+            img.src = IMAGE_URL;
+
+            function initPuzzle() {
+                tiles = [];
+                for (var i = 0; i < TOTAL; i++) tiles.push(i);
+                shuffle(tiles);
+                moves = 0;
+                selected = -1;
+                solved = false;
+                winMessage.classList.remove('show');
+                updateMoves();
+                renderBoard();
+            }
+
+            function shuffle(arr) {
+                // Fisher-Yates shuffle, ensure it's not already solved
+                do {
+                    for (var i = arr.length - 1; i > 0; i--) {
+                        var j = Math.floor(Math.random() * (i + 1));
+                        var tmp = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = tmp;
+                    }
+                } while (isSolved());
+            }
+
+            function isSolved() {
+                for (var i = 0; i < TOTAL; i++) {
+                    if (tiles[i] !== i) return false;
+                }
+                return true;
+            }
+
+            function updateMoves() {
+                moveCounter.textContent = "Moves: " + moves;
+            }
+
+            function renderBoard() {
+                board.innerHTML = '';
+                var tileSize = 128; // each tile visual size
+                var boardSize = 390; // total board background size
+
+                for (var i = 0; i < TOTAL; i++) {
+                    var tile = document.createElement('div');
+                    tile.className = 'puzzle-tile';
+                    tile.dataset.pos = i;
+
+                    var origPiece = tiles[i];
+                    var origRow = Math.floor(origPiece / GRID);
+                    var origCol = origPiece % GRID;
+
+                    // background-position to show the correct slice
+                    var bgX = -(origCol * boardSize / GRID);
+                    var bgY = -(origRow * boardSize / GRID);
+
+                    tile.style.backgroundImage = 'url("' + IMAGE_URL + '")';
+                    tile.style.backgroundPosition = bgX + 'px ' + bgY + 'px';
+                    tile.style.backgroundSize = boardSize + 'px ' + boardSize + 'px';
+
+                    // Mark correct tiles
+                    if (tiles[i] === i) {
+                        tile.classList.add('correct');
+                    }
+
+                    tile.addEventListener('click', onTileClick);
+                    board.appendChild(tile);
+                }
+            }
+
+            function onTileClick(e) {
+                if (solved) return;
+                var pos = parseInt(e.target.dataset.pos);
+
+                if (selected === -1) {
+                    // First selection
+                    selected = pos;
+                    e.target.classList.add('selected');
+                } else if (selected === pos) {
+                    // Deselect
+                    selected = -1;
+                    e.target.classList.remove('selected');
+                } else {
+                    // Swap
+                    var tmp = tiles[selected];
+                    tiles[selected] = tiles[pos];
+                    tiles[pos] = tmp;
+                    moves++;
+                    updateMoves();
+                    selected = -1;
+
+                    renderBoard();
+
+                    // Flash swapped tiles
+                    var allTiles = board.querySelectorAll('.puzzle-tile');
+                    allTiles[pos].classList.add('swapped');
+
+                    // Check win
+                    if (isSolved()) {
+                        solved = true;
+                        winMessage.classList.add('show');
+                        // Remove borders between tiles to show full image
+                        board.style.gap = '0px';
+                        board.style.padding = '0px';
+                        allTiles = board.querySelectorAll('.puzzle-tile');
+                        for (var k = 0; k < allTiles.length; k++) {
+                            allTiles[k].classList.remove('correct');
+                            allTiles[k].style.cursor = 'default';
+                            allTiles[k].style.borderRadius = '0';
+                        }
+                        // Report score
+                        fetch('/puzzle/solved', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({moves: moves})
+                        })
+                        .then(function(r) { return r.json(); })
+                        .then(function(data) {
+                            document.getElementById('navScore').textContent = data.total_points;
+                            var pe = document.getElementById('pointsEarned');
+                            pe.innerHTML = '<strong>+' + data.points_earned + ' pts</strong> &middot; Total: ' + data.total_points + ' pts &middot; Puzzles solved: ' + data.puzzles_solved;
+                            pe.classList.add('show');
+                        });
+                    }
+                }
+            }
+
+            shuffleBtn.addEventListener('click', function() {
+                board.style.gap = '3px';
+                board.style.padding = '3px';
+                initPuzzle();
+            });
+        })();
+    </script>
+</body>
+</html>

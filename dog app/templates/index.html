@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Jigsaw</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            border-bottom: 1px solid #1a1a1a;
+            background: #111;
+        }
+
+        nav .logo {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #C41230;
+            letter-spacing: -0.5px;
+        }
+
+        nav .nav-links a {
+            color: #999;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav .nav-links a:hover {
+            color: #C41230;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px 30px;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .hero .subtitle {
+            color: #777;
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: #C41230;
+            margin: 30px auto;
+        }
+
+        .main-content {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+            text-align: center;
+        }
+
+        .controls {
+            margin-bottom: 30px;
+        }
+
+        select {
+            padding: 12px 20px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            background: #151515;
+            color: #e0e0e0;
+            cursor: pointer;
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: 15px;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23888' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #C41230;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            background: #C41230;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #a30f28;
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #e0e0e0;
+            border: 1px solid #2a2a2a;
+        }
+
+        .btn-outline:hover {
+            background: #1a1a1a;
+            border-color: #C41230;
+            color: #C41230;
+        }
+
+        .section-label {
+            font-size: 0.8em;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .dog-image-container {
+            margin-top: 30px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #222;
+        }
+
+        .dog-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: 500px;
+            object-fit: cover;
+        }
+
+        .image-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: #151515;
+            border-top: 1px solid #222;
+        }
+
+        .breed-name {
+            color: #aaa;
+            font-size: 0.95em;
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+
+        .star-btn {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            font-size: 1.3em;
+            cursor: pointer;
+            padding: 8px 16px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .star-btn:hover {
+            border-color: #C41230;
+            background: #2a1018;
+            transform: scale(1.15);
+            box-shadow: 0 0 12px rgba(196, 18, 48, 0.3);
+        }
+
+        .star-btn:active {
+            transform: scale(0.9);
+            transition: transform 0.1s;
+        }
+
+        @keyframes starPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.4); }
+            100% { transform: scale(1); }
+        }
+
+        .star-btn.clicked {
+            animation: starPop 0.4s ease;
+            border-color: #C41230;
+            background: #2a1018;
+        }
+
+        .favorites-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 35px;
+            color: #888;
+            text-decoration: none;
+            font-size: 0.95em;
+            font-weight: 500;
+            padding: 10px 20px;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .favorites-link:hover {
+            color: #C41230;
+            border-color: #3a1520;
+            background: #150d10;
+        }
+
+        .favorites-count {
+            background: #C41230;
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Dog Jigsaw</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/favorites">Favorites</a>
+            <span style="color: #C41230; font-weight: 700; font-size: 0.95em; margin-left: 30px;" title="Puzzle points">&#127942; {{ score.total_points }} pts</span>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>Random Dog Images</h1>
+        <p class="subtitle">Discover and save your favorite dog photos</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="main-content">
+        <div class="section-label">Select a Breed</div>
+        <div class="controls">
+            <form method="GET" action="/">
+                <select name="breed" id="breed">
+                    <option value="">Random Breed</option>
+                    {% for breed in breeds %}
+                        <option value="{{ breed }}" {% if breed == selected_breed %}selected{% endif %}>
+                            {{ breed|capitalize }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <br>
+                <button type="submit" class="btn">Get Random Dog</button>
+                <button type="button" class="btn btn-outline" onclick="window.location.href='/'">Clear</button>
+            </form>
+        </div>
+
+        {% if dog_image %}
+            <div class="dog-image-container">
+                <img src="{{ dog_image }}" alt="Random Dog" class="dog-image">
+                <div class="image-footer">
+                    <span class="breed-name">{{ selected_breed if selected_breed else 'Random' }}</span>
+                    <form method="POST" action="/favorite" style="margin: 0;">
+                        <input type="hidden" name="image_url" value="{{ dog_image }}">
+                        <input type="hidden" name="breed" value="{{ selected_breed }}">
+                        <input type="hidden" name="next" value="/?breed={{ selected_breed }}">
+                        <button type="submit" class="star-btn" id="starBtn" title="Add to favorites">&#11088;</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        <a href="/favorites" class="favorites-link">
+            View Favorites <span class="favorites-count">{{ favorites_count }}</span>
+        </a>
+    </div>
+
+    {% if dog_image %}
+    <script>
+        document.getElementById('starBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            var btn = this;
+            btn.classList.add('clicked');
+            var form = btn.closest('form');
+            setTimeout(function() { form.submit(); }, 350);
+        });
+    </script>
+    {% endif %}
+</body>
+</html>

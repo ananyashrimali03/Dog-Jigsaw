@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Jigsaw - Favorites</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #0d0d0d;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            border-bottom: 1px solid #1a1a1a;
+            background: #111;
+        }
+
+        nav .logo {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #C41230;
+            letter-spacing: -0.5px;
+        }
+
+        nav .nav-links a {
+            color: #999;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.95em;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav .nav-links a:hover {
+            color: #C41230;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 60px 20px 30px;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+        }
+
+        .hero .subtitle {
+            color: #777;
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: #C41230;
+            margin: 30px auto;
+        }
+
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+
+        .section-label {
+            font-size: 0.8em;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .favorite-card {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #1a1a1a;
+            transition: border-color 0.2s;
+        }
+
+        .favorite-card:hover {
+            border-color: #C41230;
+        }
+
+        .favorite-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-info {
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #151515;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        .breed-label {
+            color: #aaa;
+            font-weight: 500;
+            font-size: 0.9em;
+            text-transform: capitalize;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .card-action-btn {
+            background: none;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            padding: 4px 10px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .card-action-btn:hover {
+            border-color: #C41230;
+            background: #150d10;
+            transform: scale(1.05);
+        }
+
+        .remove-btn {
+            background: none;
+            border: 1px solid #2a2a2a;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            padding: 4px 10px;
+            transition: all 0.2s;
+        }
+
+        .remove-btn:hover {
+            border-color: #C41230;
+            background: #150d10;
+            transform: scale(1.05);
+        }
+
+        .empty-msg {
+            color: #555;
+            font-size: 1.1em;
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Dog Jigsaw</div>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/favorites">Favorites</a>
+            <span style="color: #C41230; font-weight: 700; font-size: 0.95em; margin-left: 30px;" title="Puzzle points">&#127942; {{ score.total_points }} pts</span>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>My Favorites</h1>
+        <p class="subtitle">Your saved collection of dog photos</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="main-content">
+        {% if favorites %}
+            <div class="section-label">{{ favorites|length }} saved photo{{ 's' if favorites|length != 1 }}</div>
+            <div class="favorites-grid">
+                {% for fav in favorites %}
+                    <div class="favorite-card">
+                        <img src="{{ fav.url }}" alt="Favorite Dog">
+                        <div class="card-info">
+                            <span class="breed-label">{{ fav.breed if fav.breed else 'Unknown' }}</span>
+                            <div class="card-actions">
+                                <a href="/puzzle?image_url={{ fav.url|urlencode }}" class="card-action-btn" title="Play puzzle">&#129513;</a>
+                                <form method="POST" action="/favorite/remove" style="margin: 0;">
+                                    <input type="hidden" name="image_url" value="{{ fav.url }}">
+                                    <button type="submit" class="remove-btn" title="Remove from favorites">&#10060;</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-msg">No favorites yet. Go swipe some dogs!</p>
+        {% endif %}
+    </div>
+</body>
+</html>
