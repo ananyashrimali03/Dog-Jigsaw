@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 
-# Dog API base URL
+# Dog API base URL (Template: Claude Opus 4.6)
 DOG_API_URL = "https://dog.ceo/api"
 
 FAVORITES_FILE = os.path.join(os.path.dirname(__file__), 'favorites.json')
@@ -102,7 +102,7 @@ def puzzle():
 @app.route('/puzzle/solved', methods=['POST'])
 def puzzle_solved():
     moves = request.json.get('moves', 0)
-    # Fewer moves = more points (max 100 for 0 extra moves on a 3x3)
+    # Fewer moves = more points (max 100 for 0 extra moves on a 3x3) (Updates: Claude Opus 4.6)
     points = max(10, 100 - (moves * 5))
     score = load_score()
     score['puzzles_solved'] += 1
@@ -112,3 +112,4 @@ def puzzle_solved():
 
 if __name__ == '__main__':
     app.run(debug=True)
+# (All updates: Claude Opus 4.6, no manual coding, debugging)

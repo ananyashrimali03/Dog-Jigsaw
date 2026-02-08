@@ -11,6 +11,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            cursor: inherit;
         }
 
         body {
@@ -18,6 +19,7 @@
             background-color: #0d0d0d;
             color: #e0e0e0;
             min-height: 100vh;
+            cursor: url('/static/scotty-cursor.svg') 16 16, auto;
         }
 
         nav {
@@ -218,5 +220,6 @@
             <p class="empty-msg">No favorites yet. Go swipe some dogs!</p>
         {% endif %}
     </div>
+    <script src="/static/scotty-trail.js"></script>
 </body>
 </html>

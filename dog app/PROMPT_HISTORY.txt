@@ -1,0 +1,34 @@
+AI Model: Claude Opus 4.6 (Anthropic), via Claude Code CLI
+
+Key Prompts That Shaped the Implementation:
+============================================
+
+1. "Can you use Dog API and create a random image generator web app?"
+   → Created the initial Flask web app using the Dog CEO API to display random dog images with breed filtering.
+
+2. "can you update the code, so that I can star and list my favourite dog images."
+   → Added favorites system with JSON file storage, star button on images, and a dedicated favorites page.
+
+3. "can you change the ui to look similar to that of https://www.tartanhacks.com/"
+   → Redesigned the entire UI with a dark theme, Space Grotesk font, and modern layout inspired by TartanHacks.
+
+4. "add colors like that of https://www.tartanhacks.com/ and also update the starring method to: if swipe right then it'll be added to the starred list and if swiped left then it will be removed"
+   → Applied CMU tartan red (#C41230) color scheme and implemented swipe-based interaction with drag gestures.
+
+5. "remove swipe, add simple star button"
+   → Simplified interaction back to a clean star button after swipe proved unreliable on desktop.
+
+6. "can you make a little jigsaw puzzle for each dog photo selected under the favorites tab?"
+   → Built a 3x3 tile-swap jigsaw puzzle game using CSS background-position slicing and vanilla JavaScript.
+
+7. "add up the points for how many puzzles I solved"
+   → Added scoring system with points based on move efficiency, persistent score storage, and nav bar display.
+
+8. "Update the app name to Dog Jigsaw"
+   → Renamed the app across all page titles and navigation logos.
+
+9. "update the mouse pointer to look like Carnegie Mellon's scotty"
+   → Created a custom CMU Scotty dog SVG cursor and applied it across all pages.
+
+10. "can you add a trail behind the scotty mouse pointer?"
+   → Added animated paw-print trail that follows the cursor with alternating left/right gait and fade-out effect.
