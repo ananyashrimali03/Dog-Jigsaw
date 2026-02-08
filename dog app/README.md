@@ -1,13 +1,13 @@
-# 🐕 Random Dog Images Web App
+# Dog Jigsaw
 
-A simple and fun Python Flask web app that displays random dog images using the Dog CEO API!
+A Flask web app that lets you browse random dog photos, save your favorites, and solve jigsaw puzzles made from them.
 
 ## Features
 
-- View random dog images from any breed
-- Select specific breeds from a dropdown menu
-- Beautiful gradient UI design
-- Simple and easy to use
+- **Browse Dogs** — View random dog images from the [Dog CEO API](https://dog.ceo/dog-api/), optionally filtered by breed
+- **Save Favorites** — Star photos to add them to your favorites collection
+- **Jigsaw Puzzles** — Play a 3x3 tile-swap puzzle using any favorited photo
+- **Score Tracking** — Earn points for solving puzzles (fewer moves = more points), tracked across sessions
 
 ## How to Run
 
@@ -26,14 +26,28 @@ python app.py
 http://127.0.0.1:5000
 ```
 
-4. Enjoy random dog pictures!
+## Project Structure
 
-## API Used
-
-This app uses the [Dog CEO API](https://dog.ceo/dog-api/) which provides free random dog images.
+```
+app.py              # Flask routes and API logic
+favorites.json      # Saved favorite images (auto-created)
+score.json          # Puzzle score data (auto-created)
+requirements.txt    # Python dependencies
+templates/
+  index.html        # Home page - browse and star dogs
+  favorites.html    # Favorites gallery with puzzle links
+  puzzle.html       # Jigsaw puzzle game
+```
 
 ## How It Works
 
-- The app fetches data from `https://dog.ceo/api`
-- You can get random images from all breeds or select a specific breed
-- Each time you click "Get Random Dog!" you'll see a new random image
+- Browse random dog images on the home page, filter by breed with the dropdown
+- Click the star button to save a photo to your favorites
+- Go to Favorites and click the puzzle icon on any saved photo to play a jigsaw puzzle
+- Swap tiles by clicking two of them — solve the puzzle to earn points
+- Fewer moves = more points (max 100, min 10 per puzzle)
+- Your total score is shown in the nav bar across all pages
+
+## API Used
+
+This app uses the free [Dog CEO API](https://dog.ceo/dog-api/) — no API key required.
